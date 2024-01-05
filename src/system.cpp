@@ -17,11 +17,50 @@ using std::vector;
 
 You need to properly format the uptime. Refer to the comments mentioned in format. cpp for formatting the uptime.*/
 
-// TODO: Return the system's CPU
+// Return the system's CPU
 Processor& System::Cpu() { return cpu_; }
 
-// TODO: Return a container composed of the system's processes
-vector<Process>& System::Processes() { return processes_; }
+// Return the system's CPU
+Processor& System::Cpu0() { return cpu0_; }
+
+// Return the system's CPU
+Processor& System::Cpu1() { return cpu1_; }
+
+// Return the system's CPU
+Processor& System::Cpu2() { return cpu2_; }
+
+// Return the system's CPU
+Processor& System::Cpu3() { return cpu3_; }
+
+// Return the system's CPU
+Processor& System::Cpu4() { return cpu4_; }
+
+// Return the system's CPU
+Processor& System::Cpu5() { return cpu5_; }
+
+// Return the system's CPU
+Processor& System::Cpu6() { return cpu6_; }
+
+// Return the system's CPU
+Processor& System::Cpu7() { return cpu7_; }
+// Return a container composed of the system's processes
+vector<Process>& System::Processes() { 
+    auto pids = LinuxParser::Pids();
+    processes_.clear();
+    for (auto pid: pids) {
+        Process process;
+        process.Pid(pid);
+        process.User(pid);
+        process.Command(pid);
+        process.CpuUtilization(pid);
+        process.Ram(pid);
+        process.UpTime(pid);
+        processes_.push_back(process);
+    }
+
+    std::sort(processes_.begin(), processes_.end(), std::greater<Process>());
+    return processes_;
+}
 
 // Done
 std::string System::Kernel() { return LinuxParser::Kernel(); }

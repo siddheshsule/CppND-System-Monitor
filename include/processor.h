@@ -1,12 +1,13 @@
 #ifndef PROCESSOR_H
 #define PROCESSOR_H
 
-class Processor {
- public:
-  float Utilization();  // TODO: See src/processor.cpp
+#include <string>
 
-  // TODO: Declare any necessary private members
- private:
+class Processor {
+	public:
+  		float Utilization();  // See src/processor.cpp
+	private:
+  		std::pair<long, long> m_jiffies;
 };
 
 #endif

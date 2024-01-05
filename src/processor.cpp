@@ -3,20 +3,20 @@
 #include <vector>
 #include <string>
 #include <iostream>
+#include <chrono>
+#include <thread>
 
 
-// DONE: Return the aggregate CPU utilization
-float Processor::Utilization() { 
-    std::vector<std::string> cpuUtilizationVector = LinuxParser::CpuUtilization();
-    float Idle, NonIdle, Total;
-    Idle = std::stof(cpuUtilizationVector.at(3)) + std::stof(cpuUtilizationVector.at(4));
-    NonIdle = std::stof(cpuUtilizationVector.at(0)) // to grab value of user
-            + std::stof(cpuUtilizationVector.at(1)) // to grab value of nice
-            + std::stof(cpuUtilizationVector.at(2)) // to grab value of system
-            + std::stof(cpuUtilizationVector.at(5)) // to grab value of irq
-            + std::stof(cpuUtilizationVector.at(6)) // to grab value of softirq
-            + std::stof(cpuUtilizationVector.at(7)); // to grab value of steal
+// Return the aggregate CPU utilization
+float Processor::Utilization() {
+	long activeJiffies = LinuxParser::ActiveJiffies();
+    long jiffies = LinuxParser::Jiffies();
+  
+  long activeDiff = activeJiffies - m_jiffies.first;
+  long totalDiff = jiffies - m_jiffies.second;
+  float usage = static_cast<float> (activeDiff) / totalDiff;
+  m_jiffies.first = activeJiffies;
+  m_jiffies.second = jiffies;
+  return usage;
 
-    Total = Idle + NonIdle;
-    return (Total - Idle)/Total;
- }
+}
